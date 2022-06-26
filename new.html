@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form onsubmit="saveToLocalStorage(event)">
+      <label>Name</label>
+      <input type="text" name="username" required /><br /><br />
+      <label>Email ID</label>
+      <input type="email" name="emailId" required /><br /><br />
+      <label>Phone Number</label>
+      <input type="tel" name="phoneNo" /><br /><br />
+      <button>Submit</button>
+    </form>
+    <ul id="listOfUsers"></ul>
+    <script>
+      function saveToLocalStorage(event) {
+        event.preventDefault();
+        const name = event.target.username.value;
+        const email = event.target.emailId.value;
+        const phone = event.target.phoneNo.value;
+        const obj = {
+          name,
+          email,
+          phone,
+        };
+        localStorage.setItem(obj.email, JSON.stringify(obj));
+        showNewUserOnScreen(obj);
+      }
+      function showNewUserOnScreen(user) {
+        if (localStorage.getItem(user.emailId) !== null) {
+          removeUserFromScreen(user.email);
+        }
+        const parentNode = document.getElementById("listOfUsers");
+        const chileHTML = `<li id=${user.email}> ${user.name} - ${user.email}
+          <button onclick=deleteUser(${user.email})>Delete User</button>
+          </li>`;
+        parentNode.innerHTML = parentNode.innerHTML + chileHTML;
+      }
+      function deleteUser(emailId){
+        localStorage.removeItem(emailId);
+        removeUserFromScreen(emailId);
+      }
+      function removeUserFromScreen(emailId) {
+        const parentNode = document.getElementById("listOfUsers");
+        const childNodeToBeDeleted = document.getElementById(emailId);
+        parentNode.removeChild(childNodeToBeDeleted);
+      }
+    </script>
+  </body>
+</html>
